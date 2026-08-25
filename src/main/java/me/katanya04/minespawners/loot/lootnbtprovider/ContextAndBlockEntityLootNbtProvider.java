@@ -9,7 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.advancements.criterion.NbtPredicate;
+import net.minecraft.advancements.predicates.NbtPredicate;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;

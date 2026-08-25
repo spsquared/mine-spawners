@@ -6,7 +6,6 @@
   "mixins": [
     "SpawnerBlockDropsXpMixin",
     "SpawnerBlockPermissionsMixin",
-    "TrialSpawnerCorrectToolMixin",
     "TrialSpawnerTooltipMixin",
     "UpdateSpawnPotentialsMixin"
   ],

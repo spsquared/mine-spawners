@@ -7,10 +7,10 @@ import me.katanya04.minespawners.loot.functions.SetDataComponentFunction;
 import me.katanya04.minespawners.loot.lootnbtprovider.ContextAndBlockEntityLootNbtProvider;
 import me.katanya04.minespawners.tags.DynamicTags;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.minecraft.advancements.criterion.DataComponentMatchers;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.DataComponentMatchers;
+import net.minecraft.advancements.predicates.EnchantmentPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.DataComponentPredicates;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
@@ -23,6 +23,7 @@ import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -53,7 +54,7 @@ public class SpawnerDrops {
                 removeDelayAndCoords.put("y", IntTag.valueOf(0));
                 removeDelayAndCoords.put("z", IntTag.valueOf(0));
 
-                BlockEntityType<?> type = Blocks.SPAWNER.getLootTable().get() == key ? BlockEntityType.MOB_SPAWNER : BlockEntityType.TRIAL_SPAWNER;
+                BlockEntityType<?> type = Blocks.SPAWNER.getLootTable().get() == key ? BlockEntityTypes.MOB_SPAWNER : BlockEntityTypes.TRIAL_SPAWNER;
 
                 LootPool.Builder pool = LootPool.lootPool()
                         .add(LootItem.lootTableItem(Blocks.SPAWNER.getLootTable().get() == key ? Items.SPAWNER : Items.TRIAL_SPAWNER))
