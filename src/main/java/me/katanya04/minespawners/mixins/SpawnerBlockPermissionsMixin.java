@@ -10,11 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Set;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 
 /**
  * Mixin that allows non-creative players to place a spawner without it's NBT resetting
  */
-@Mixin(BlockEntityType.class)
+@Mixin(BlockEntityTypes.class)
 public abstract class SpawnerBlockPermissionsMixin {
     @Mutable
     @Final
@@ -23,7 +24,7 @@ public abstract class SpawnerBlockPermissionsMixin {
 
     @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"), method = "<clinit>", cancellable = true)
     private static void injected(CallbackInfo ci) {
-        OP_ONLY_CUSTOM_DATA = Set.of(BlockEntityType.COMMAND_BLOCK, BlockEntityType.LECTERN, BlockEntityType.SIGN, BlockEntityType.HANGING_SIGN);
+        OP_ONLY_CUSTOM_DATA = Set.of(BlockEntityTypes.COMMAND_BLOCK, BlockEntityTypes.LECTERN, BlockEntityTypes.SIGN, BlockEntityTypes.HANGING_SIGN);
         ci.cancel();
     }
 }
