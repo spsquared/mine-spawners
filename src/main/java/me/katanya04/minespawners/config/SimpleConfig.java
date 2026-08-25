@@ -94,12 +94,17 @@ public class SimpleConfig {
     }
 
     private static boolean isPickaxe(ItemStack stack) {
-        return  stack.is(ItemTags.PICKAXES) ||
-                stack.isCorrectToolForDrops(Blocks.SPAWNER.defaultBlockState()) ||
-                (stack.get(DataComponents.TOOL) != null && stack.get(DataComponents.TOOL).rules().stream()
-                        .anyMatch(r -> (r.blocks() instanceof HolderSet.Named<Block> blocks) &&
-                                blocks.key().location().equals(BlockTags.MINEABLE_WITH_PICKAXE.location()))
-                );
+        try {
+            return  stack.is(ItemTags.PICKAXES) ||
+                    stack.isCorrectToolForDrops(Blocks.SPAWNER.defaultBlockState()) ||
+                    (stack.get(DataComponents.TOOL) != null && stack.get(DataComponents.TOOL).rules().stream()
+                            .anyMatch(r -> (r.blocks() instanceof HolderSet.Named<Block> blocks) &&
+                                    blocks.key().location().equals(BlockTags.MINEABLE_WITH_PICKAXE.location()))
+                    );
+        } catch (Exception e) {
+            // Components not yet bound - fall back to tag-based check only
+            return stack.is(ItemTags.PICKAXES);
+        }
     }
 
     public static void initializeConfig() {

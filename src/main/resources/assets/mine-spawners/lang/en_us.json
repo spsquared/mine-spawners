@@ -1,5 +1,6 @@
 {
   "config.title": "Mine spawners configuration",
   "config.drop_chance": "Drop chance",
-  "config.blacklisted_pickaxes": "Blacklisted pickaxes"
+  "config.blacklisted_pickaxes": "Blacklisted pickaxes",
+  "config.join_world_message": "Join a world to configure pickaxe blacklist"
 }

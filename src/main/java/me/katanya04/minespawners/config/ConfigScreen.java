@@ -2,7 +2,9 @@ package me.katanya04.minespawners.config;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,11 +25,13 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class ConfigScreen extends OptionsSubScreen {
     protected final OptionInstance<Double> slider;
-    protected final List<Item> pickaxes;
+    private List<Item> pickaxes;
     protected PickaxesList pickaxesList;
+    private final boolean inWorld;
 
     protected ConfigScreen(Screen previousScreen) {
         super(previousScreen, null, Component.translatable("config.title"));
+        this.inWorld = Minecraft.getInstance().level != null;
         this.slider = new OptionInstance<>(
                 "config.drop_chance",
                 OptionInstance.noTooltip(),
@@ -35,9 +40,26 @@ public class ConfigScreen extends OptionsSubScreen {
                 (double) SimpleConfig.DROP_CHANCE.getValue(),
                 SimpleConfig.DROP_CHANCE::setValue
         );
-        this.pickaxes = SimpleConfig.getAllPickaxes().stream().sorted(
-                (p1, p2) -> weirdRounding(getHarvestLevel(p1) - getHarvestLevel(p2))
-        ).toList();
+        // Defer pickaxe list initialization to avoid accessing DataComponents before they're bound
+    }
+
+    protected List<Item> getPickaxes() {
+        if (!inWorld) {
+            // Return empty list if not in world - components aren't bound yet
+            return Collections.emptyList();
+        }
+        if (this.pickaxes == null) {
+            try {
+                // Try to sort by harvest level if components are available
+                this.pickaxes = SimpleConfig.getAllPickaxes().stream().sorted(
+                        (p1, p2) -> weirdRounding(getHarvestLevel(p1) - getHarvestLevel(p2))
+                ).toList();
+            } catch (Exception e) {
+                // Components not yet bound - return empty list
+                this.pickaxes = Collections.emptyList();
+            }
+        }
+        return this.pickaxes;
     }
 
     protected int weirdRounding(double x) {
@@ -70,14 +92,28 @@ public class ConfigScreen extends OptionsSubScreen {
             }
         });
         this.list.setHeight(slider.createButton(null).getHeight() + 10);
-        this.pickaxesList = this.layout.addToContents(new PickaxesList(this, this.minecraft));
+
+        if (inWorld) {
+            this.pickaxesList = this.layout.addToContents(new PickaxesList(this, this.minecraft));
+        } else {
+            // Show message that user needs to join a world to configure pickaxe blacklist
+            MultiLineTextWidget messageWidget = new MultiLineTextWidget(
+                    Component.translatable("config.join_world_message"),
+                    this.font
+            );
+            messageWidget.setCentered(true);
+            this.layout.addToContents(messageWidget);
+        }
+
         this.addOptions();
     }
 
     @Override
     protected void repositionElements() {
         super.repositionElements();
-        this.pickaxesList.updateSize(this.width, this.layout);
+        if (inWorld && this.pickaxesList != null) {
+            this.pickaxesList.updateSize(this.width, this.layout);
+        }
     }
 
     @Override

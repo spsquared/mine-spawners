@@ -35,8 +35,8 @@ public class PickaxesList extends ContainerObjectSelectionList<PickaxesList.@Not
         this.clearEntries();
         this.addEntry(new TitleEntry(Component.translatable("config.blacklisted_pickaxes")));
         int initialX = (getRowWidth() - getButtonsPerRow() * (BUTTON_MARGIN + BUTTON_SIZE) + BUTTON_MARGIN) / 2 + 25;
-        for (int i = 0; i < configScreen.pickaxes.size(); i += getButtonsPerRow()) {
-            this.addEntry(new RowEntry(configScreen.pickaxes.subList(i, Math.min(i + getButtonsPerRow(), configScreen.pickaxes.size())), initialX));
+        for (int i = 0; i < configScreen.getPickaxes().size(); i += getButtonsPerRow()) {
+            this.addEntry(new RowEntry(configScreen.getPickaxes().subList(i, Math.min(i + getButtonsPerRow(), configScreen.getPickaxes().size())), initialX));
         }
     }
 
